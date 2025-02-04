@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<a th:href="@{/}">홈으로 가기</a>
+<a th:href="@{/users}">마이페이지</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>배송지 별칭</th>
+        <th>배송지 주소</th>
+        <th>기타사항</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="deliveryAddressInfoDto : ${deliveryAddressInfoDtos}">
+        <td th:text="${deliveryAddressInfoDto.addressName}"></td>
+        <td th:text="${deliveryAddressInfoDto.zipcode + ' ' + deliveryAddressInfoDto.streetAddr + ' ' + deliveryAddressInfoDto.detailAddr}"></td>
+        <td th:text="${deliveryAddressInfoDto.etc}"></td>
+        <td>
+            <form th:action="@{/users/deliveryaddressinfo/edit}" method="post">
+                <input type="hidden" name="deliveryAddressSeq" th:value="${deliveryAddressInfoDto.deliveryAddressSeq}">
+                <button type="submit">수정</button>
+            </form>
+
+            <form th:action="@{/users/deliveryaddressinfo/delete}" method="post">
+                <input type="hidden" name="deliveryAddressSeq" th:value="${deliveryAddressInfoDto.deliveryAddressSeq}">
+                <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+            </form>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

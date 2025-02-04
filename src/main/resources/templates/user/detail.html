@@ -1,0 +1,20 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<div th:text="'이메일:' + ${userDto.email}"></div>
+<div th:text="'전화번호:' + ${userDto.phone}"></div>
+<div th:text="'닉네임:' + ${userDto.nickname}"></div>
+<div th:text="'등급:' + ${userDto.grade}"></div>
+<div th:text="'마일리지:' + ${userDto.mileage}"></div>
+
+<a th:href="@{/}">홈으로 가기</a>
+<a th:href="@{/users/edit}">개인정보 수정</a>
+<a th:href="@{/users/deliveryaddressinfo}">배송지 목록</a>
+
+</body>
+</html>
