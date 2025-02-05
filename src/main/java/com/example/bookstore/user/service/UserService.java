@@ -6,6 +6,7 @@ import com.example.bookstore.user.domain.User;
 import com.example.bookstore.user.domain.UserGrade;
 import com.example.bookstore.user.domain.UserRole;
 import com.example.bookstore.user.dto.JoinUserDto;
+import com.example.bookstore.user.dto.UpdateUserDto;
 import com.example.bookstore.user.dto.UserDto;
 import com.example.bookstore.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -29,7 +31,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void join(JoinUserDto joinUserDto) {
+    public void save(JoinUserDto joinUserDto) {
         User user = User.builder()
                 .email(joinUserDto.getEmail())
                 .password(bCryptPasswordEncoder.encode(joinUserDto.getPassword()))
@@ -51,7 +53,7 @@ public class UserService {
                 .zipcode(joinUserDto.getZipcode())
                 .streetAddr(joinUserDto.getStreetAddr())
                 .detailAddr(joinUserDto.getDetailAddr())
-                .etc("없음")
+                .etc(null)
                 .createdAt(LocalDateTime.now())
                 .lastModifiedAt(LocalDateTime.now())
                 .build();
@@ -65,5 +67,28 @@ public class UserService {
 
         UserDto userDto = UserDto.from(user);
         return userDto;
+    }
+
+    public List<UserDto> findAllUser() {
+        List<User> all = userRepository.findAllByRole(UserRole.ROLE_USER);
+        List<UserDto> userDtos = all.stream()
+                .map(user -> UserDto.from(user))
+                .toList();
+
+        return userDtos;
+    }
+
+    public void updateUser(UpdateUserDto updateUserDto) {
+        User user = userRepository.findByEmail(updateUserDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
+
+        user.changeUserInfo(updateUserDto.getPhone(), updateUserDto.getNickname());
+    }
+
+    public void delete(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
+
+        user.changeUseN();
     }
 }

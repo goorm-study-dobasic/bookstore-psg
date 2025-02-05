@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<a th:href="@{/admin}">홈으로 가기</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>유저</th>
+        <th>블랙리스트 사유</th>
+        <th>블랙리스트 등록 시간</th>
+        <th>블랙리스트 해제 시간</th>
+        <th>블랙리스트 등록자</th>
+        <th>블랙리스트 해제자</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="blacklistDto : ${blacklistDtos}">
+        <td th:text="${blacklistDto.email}"></td>
+        <td th:text="${blacklistDto.reason}"></td>
+        <td th:text="${blacklistDto.blacklistedAt}"></td>
+        <td th:text="${blacklistDto.unleashedAt}"></td>
+        <td th:text="${blacklistDto.blacklistedBy}"></td>
+        <td th:text="${blacklistDto.unleashedBy}"></td>
+        <td th:if="${blacklistDto.unleashedAt} == null">
+            <form th:action="@{/admin/blacklist/delete}" method="post">
+                <input type="hidden" name="email" th:value="${blacklistDto.email}">
+                <button type="submit">블랙리스트 해제</button>
+            </form>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

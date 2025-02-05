@@ -44,7 +44,7 @@ public class HomeController {
             return "join"; // 유효성 검증 실패 시 다시 회원가입 페이지로 이동
         }
 
-        userService.join(joinUserDto);
+        userService.save(joinUserDto);
         return "redirect:/login";
     }
 

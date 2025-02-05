@@ -1,0 +1,46 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<a th:href="@{/}">홈으로 가기</a>
+<div>
+    <form role="form" action="/users" th:object="${updateUserDto}" method="post">
+        <div>
+            <label th:for="email">아이디(이메일)</label>
+            <input type="text" id="email" th:field="${updateUserDto.email}" readonly>
+        </div>
+        <div>
+            <label th:for="nickname">닉네임</label>
+            <input type="text" th:field="${updateUserDto.nickname}" placeholder="닉네임을 입력하세요">
+            <p th:if="${#fields.hasErrors('nickname')}" th:errors="${updateUserDto.nickname}">Incorrect nickname</p>
+        </div>
+        <div>
+            <label th:for="phone">전화번호</label>
+            <input type="text" th:field="${updateUserDto.phone}" placeholder="전화번호를 입력하세요">
+            <p th:if="${#fields.hasErrors('phone')}" th:errors="${updateUserDto.phone}">Incorrect phone</p>
+        </div>
+        <div>
+            <label th:for="grade">등급</label>
+            <input type="text" id="grade" th:field="${updateUserDto.grade}" readonly>
+        </div>
+        <div>
+            <label th:for="mileage">마일리지</label>
+            <input type="text" id="mileage" th:field="${updateUserDto.mileage}" readonly>
+        </div>
+        <br>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary">수정</button>
+    </form>
+    <br>
+</div>
+<a th:href="@{/users}">취소</a>
+<form th:action="@{/users/delete}" method="post">
+    <button type="submit" onclick="return confirm('정말 탈퇴하시겠습니까?');">탈퇴</button>
+</form>
+
+</body>
+</html>

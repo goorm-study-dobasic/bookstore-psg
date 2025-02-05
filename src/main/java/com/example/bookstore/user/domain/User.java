@@ -31,4 +31,18 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    public void changeUserInfo(String phone, String nickname) {
+        this.phone = phone;
+        this.nickname = nickname;
+        this.lastModifiedAt = LocalDateTime.now();
+    }
+
+    public void changeUseN() {
+        this.useYn = 'N';
+    }
+
+    public void changeUseY() {
+        this.useYn = 'Y';
+    }
 }

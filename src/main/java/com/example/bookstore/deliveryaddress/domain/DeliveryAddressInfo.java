@@ -34,4 +34,13 @@ public class DeliveryAddressInfo {
 
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
+
+    public void changeDeliveryAddressInfo(String addressName, String zipcode, String streetAddr, String detailAddr, String etc) {
+        this.addressName = addressName;
+        this.zipcode = zipcode;
+        this.streetAddr = streetAddr;
+        this.detailAddr = detailAddr;
+        this.etc = etc;
+        this.lastModifiedAt = LocalDateTime.now();
+    }
 }

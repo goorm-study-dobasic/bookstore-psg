@@ -2,8 +2,7 @@
 <body>
 <div>
     <button type="button" onclick="window.location.href='/'">홈으로 가기</button>
-    <form role="form" action="/users/deliveryaddressinfo" th:object="${deliveryAddressInfoUpdateDto}" method="post">
-        <input type="hidden" th:field="*{deliveryAddressInfoSeq}">
+    <form role="form" action="/users/deliveryaddressinfo/create" th:object="${deliveryAddressInfoCreateDto}" method="post">
         <div>
             <label th:for="addressName">별칭</label>
             <input type="text" id="addressName" th:field="*{addressName}" placeholder="별칭을 입력하세요">
@@ -40,7 +39,7 @@
 
         <br>
 
-        <button type="submit" id="submitBtn" class="btn btn-primary" disabled>배송지 수정</button>
+        <button type="submit" id="submitBtn" class="btn btn-primary" disabled>배송지 등록</button>
         <button type="button" onclick="window.location.href='/users/deliveryaddressinfo'">취소</button>
     </form>
     <br>
