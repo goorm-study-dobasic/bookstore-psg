@@ -6,11 +6,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Entity
 public class DeliveryAddressInfo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

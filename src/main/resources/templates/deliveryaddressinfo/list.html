@@ -6,9 +6,15 @@
     <title>Document</title>
 </head>
 <body>
-<a th:href="@{/}">홈으로 가기</a>
-<a th:href="@{/users}">마이페이지</a>
-<a th:href="@{/users/deliveryaddressinfo/create}">배송지 등록</a>
+<form th:action="@{/}">
+    <button>홈으로 가기</button>
+</form>
+<form th:action="@{/users}">
+    <button>마이페이지</button>
+</form>
+<form th:action="@{/users/deliveryaddressinfo/create}">
+    <button>배송지 등록</button>
+</form>
 
 <table>
     <thead>

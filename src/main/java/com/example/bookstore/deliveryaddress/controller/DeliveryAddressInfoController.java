@@ -28,6 +28,7 @@ public class DeliveryAddressInfoController {
 
         model.addAttribute("deliveryAddressInfoDtos", deliveryAddressInfoService.findByUser(customUserDetails.getUsername()));
 
+
         return "deliveryaddressinfo/list";
     }
 
@@ -56,6 +57,7 @@ public class DeliveryAddressInfoController {
         deliveryAddressInfoService.save(customUserDetails.getUsername(), deliveryAddressInfoCreateDto);
         return "redirect:/users/deliveryaddressinfo";
     }
+
 
     // 수정폼 조회용
     @PostMapping("/deliveryaddressinfo/edit")

@@ -6,15 +6,20 @@
     <title>온라인 서점</title>
 </head>
 <body>
-<ul>
+<h2>온라인 서점 관리자 페이지</h2>
     <!-- 로그인 여부에 따라 다른 UI 표시 -->
-    <li th:if="${#authorization.expression('isAuthenticated()')}">
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
         <span th:text="${#authentication.principal.nickname} + ' 관리자님 환영합니다!'"></span>
         <br>
-        <a th:href="@{/admin/users}">유저 관리</a>
-        <a th:href="@{/admin/blacklist}">블랙리스트 관리</a>
-        <a th:href="@{/logout}">로그아웃</a>
-    </li>
-</ul>
+        <form th:action="@{/admin/users}">
+            <button>유저 관리</button>
+        </form>
+        <form th:action="@{/admin/blacklist}">
+            <button>블랙리스트 관리</button>
+        </form>
+        <form th:action="@{/logout}">
+            <button>로그아웃</button>
+        </form>
+    </div>
 </body>
 </html>

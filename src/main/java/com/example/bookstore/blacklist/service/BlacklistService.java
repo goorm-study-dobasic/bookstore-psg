@@ -6,6 +6,7 @@ import com.example.bookstore.blacklist.dto.BlacklistDto;
 import com.example.bookstore.blacklist.repository.BlacklistRepository;
 import com.example.bookstore.user.domain.User;
 import com.example.bookstore.user.repository.UserRepository;
+import com.example.bookstore.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,10 @@ import java.util.List;
 public class BlacklistService {
 
     private final BlacklistRepository blacklistRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public void save(AddBlacklistDto addBlacklistDto) {
-        User user = userRepository.findByEmail(addBlacklistDto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
+        User user = userService.findUserByEmail(addBlacklistDto.getEmail());
 
         Blacklist blacklist = Blacklist.builder()
                 .user(user)
@@ -40,8 +40,7 @@ public class BlacklistService {
     }
 
     public void unleashed(String email, String unleashedBy) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
+        User user = userService.findUserByEmail(email);
 
         Blacklist blacklist = blacklistRepository.findByUserAndUnleashedAtIsNull(user);
         blacklist.unleashed(unleashedBy);

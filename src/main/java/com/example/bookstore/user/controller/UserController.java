@@ -25,7 +25,7 @@ public class UserController {
     @GetMapping("/users")
     public String myPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
         String email = customUserDetails.getUsername();
-        UserDto userDto = userService.findByEmail(email);
+        UserDto userDto = userService.findUserDtoByEmail(email);
 
         model.addAttribute("userDto", userDto);
         return "user/detail";
@@ -33,7 +33,7 @@ public class UserController {
 
     @PostMapping("/users/edit")
     public String edit(@RequestParam("email") String email, Model model) {
-        UserDto userDto = userService.findByEmail(email);
+        UserDto userDto = userService.findUserDtoByEmail(email);
         model.addAttribute("updateUserDto", UpdateUserDto.from(userDto));
 
         return "user/edit";

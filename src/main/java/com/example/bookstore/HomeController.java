@@ -1,5 +1,7 @@
 package com.example.bookstore;
 
+import com.example.bookstore.deliveryaddress.service.DeliveryAddressInfoService;
+import com.example.bookstore.user.domain.User;
 import com.example.bookstore.user.dto.JoinUserDto;
 import com.example.bookstore.user.service.UserService;
 import jakarta.validation.Valid;
@@ -20,6 +22,7 @@ import java.util.Map;
 public class HomeController {
 
     private final UserService userService;
+    private final DeliveryAddressInfoService deliveryAddressInfoService;
 
     @GetMapping("/")
     public String index() {
@@ -44,7 +47,8 @@ public class HomeController {
             return "join"; // 유효성 검증 실패 시 다시 회원가입 페이지로 이동
         }
 
-        userService.save(joinUserDto);
+        User savedUser = userService.save(joinUserDto);
+        deliveryAddressInfoService.save(savedUser, joinUserDto.getZipcode(), joinUserDto.getStreetAddr(), joinUserDto.getDetailAddr());
         return "redirect:/login";
     }
 

@@ -1,7 +1,7 @@
 package com.example.bookstore.user.service;
 
 import com.example.bookstore.deliveryaddress.domain.DeliveryAddressInfo;
-import com.example.bookstore.deliveryaddress.repository.DeliveryAddressInfoRepository;
+import com.example.bookstore.deliveryaddress.service.DeliveryAddressInfoService;
 import com.example.bookstore.user.domain.User;
 import com.example.bookstore.user.domain.UserGrade;
 import com.example.bookstore.user.domain.UserRole;
@@ -24,14 +24,13 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final DeliveryAddressInfoRepository deliveryAddressInfoRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public boolean checkDuplicateEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    public void save(JoinUserDto joinUserDto) {
+    public User save(JoinUserDto joinUserDto) {
         User user = User.builder()
                 .email(joinUserDto.getEmail())
                 .password(bCryptPasswordEncoder.encode(joinUserDto.getPassword()))
@@ -46,27 +45,21 @@ public class UserService {
                 .build();
 
         User savedUser = userRepository.save(user);
-
-        DeliveryAddressInfo deliveryAddressInfo = DeliveryAddressInfo.builder()
-                .user(savedUser)
-                .addressName("기본 배송지")
-                .zipcode(joinUserDto.getZipcode())
-                .streetAddr(joinUserDto.getStreetAddr())
-                .detailAddr(joinUserDto.getDetailAddr())
-                .etc(null)
-                .createdAt(LocalDateTime.now())
-                .lastModifiedAt(LocalDateTime.now())
-                .build();
-
-        deliveryAddressInfoRepository.save(deliveryAddressInfo);
+        return user;
     }
 
-    public UserDto findByEmail(String email) {
+    public UserDto findUserDtoByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
 
         UserDto userDto = UserDto.from(user);
         return userDto;
+    }
+
+    public User findUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
+        return user;
     }
 
     public List<UserDto> findAllUser() {

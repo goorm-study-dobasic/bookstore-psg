@@ -6,9 +6,8 @@ import com.example.bookstore.deliveryaddress.dto.DeliveryAddressInfoDto;
 import com.example.bookstore.deliveryaddress.dto.DeliveryAddressInfoUpdateDto;
 import com.example.bookstore.deliveryaddress.repository.DeliveryAddressInfoRepository;
 import com.example.bookstore.user.domain.User;
-import com.example.bookstore.user.repository.UserRepository;
+import com.example.bookstore.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +21,11 @@ import java.util.NoSuchElementException;
 public class DeliveryAddressInfoService {
 
     private final DeliveryAddressInfoRepository deliveryAddressInfoRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public List<DeliveryAddressInfoDto> findByUser(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
+        User user = userService.findUserByEmail(email);
+
 
         List<DeliveryAddressInfo> deliveryAddressInfos = deliveryAddressInfoRepository.findByUser(user);
 
@@ -36,10 +35,23 @@ public class DeliveryAddressInfoService {
                 .toList();
     }
 
-    public void save(String email, DeliveryAddressInfoCreateDto deliveryAddressInfoCreateDto) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
+    public void save(User savedUser, String zipcode, String streetAddr, String detailAddr) {
 
+        DeliveryAddressInfo deliveryAddressInfo = DeliveryAddressInfo.builder()
+                .user(savedUser)
+                .addressName("기본 배송지")
+                .zipcode(zipcode)
+                .streetAddr(streetAddr)
+                .detailAddr(detailAddr)
+                .etc(null)
+                .createdAt(LocalDateTime.now())
+                .lastModifiedAt(LocalDateTime.now())
+                .build();
+        deliveryAddressInfoRepository.save(deliveryAddressInfo);
+    }
+
+    public void save(String email, DeliveryAddressInfoCreateDto deliveryAddressInfoCreateDto) {
+        User user = userService.findUserByEmail(email);
         DeliveryAddressInfo deliveryAddressInfo = DeliveryAddressInfo
                 .builder()
                 .user(user)
@@ -67,8 +79,7 @@ public class DeliveryAddressInfoService {
     }
 
     public boolean checkDuplicateAddressName(String email, String addressName) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("유저가 존재하지 않습니다."));
+        User user = userService.findUserByEmail(email);
         List<DeliveryAddressInfo> deliveryAddressInfos = deliveryAddressInfoRepository.findByUser(user);
 
         return deliveryAddressInfos

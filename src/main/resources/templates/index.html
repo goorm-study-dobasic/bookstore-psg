@@ -6,19 +6,26 @@
     <title>온라인 서점</title>
 </head>
 <body>
-<ul>
-    <!-- 로그인 여부에 따라 다른 UI 표시 -->
-    <li th:if="${#authorization.expression('isAuthenticated()')}">
-        <span th:text="${#authentication.principal.nickname} + '님 환영합니다!'"></span>
-        <a th:href="@{/users}">마이페이지</a>
-        <a th:href="@{/logout}">로그아웃</a>
-    </li>
+<h2>온라인 서점 홈 화면</h2>
+<!-- 로그인 여부에 따라 다른 UI 표시 -->
+<div th:if="${#authorization.expression('isAuthenticated()')}">
+    <span th:text="${#authentication.principal.nickname} + '님 환영합니다!'"></span>
+    <form th:action="@{/users}">
+        <button>마이페이지</button>
+    </form>
+    <form th:action="@{/logout}">
+        <button>로그아웃</button>
+    </form>
+</div>
 
-    <!-- 로그인하지 않은 경우 -->
-    <li th:unless="${#authorization.expression('isAuthenticated()')}">
-        <a th:href="@{/login}">로그인</a>
-        <a th:href="@{/join}">회원가입</a>
-    </li>
-</ul>
+<!-- 로그인하지 않은 경우 -->
+<div th:unless="${#authorization.expression('isAuthenticated()')}">
+    <form th:action="@{/login}">
+        <button>로그인</button>
+    </form>
+    <form th:action="@{/join}">
+        <button>회원가입</button>
+    </form>
+</div>
 </body>
 </html>

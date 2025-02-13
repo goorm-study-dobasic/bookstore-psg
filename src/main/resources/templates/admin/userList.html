@@ -6,8 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-<a th:href="@{/admin}">홈으로 가기</a>
-
+<h2>유저 목록</h2>
+<form th:action="@{/admin}">
+    <button>홈으로 가기</button>
+</form>
 <table>
     <thead>
     <tr>

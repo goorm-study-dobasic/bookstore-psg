@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
+<h2>회원가입</h2>
 <button type="button" onclick="window.location.href='/'">홈으로 가기</button>
 <div>
     <form role="form" action="/join" th:object="${joinUserDto}" method="post" onsubmit="return validatePassword();">
@@ -8,6 +9,7 @@
             <input type="text" id="email" th:field="*{email}" placeholder="아이디(이메일)을 입력하세요">
             <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect email</p>
             <button type="button" onclick="checkEmail()">이메일 중복 확인</button>
+            <button id="resetBtn" type="button" onclick="resetCheckEmail()" hidden>재설정</button>
             <p id="emailCheckResult"></p>
         </div>
         <div>
@@ -32,15 +34,13 @@
         </div>
         <div>
             <label th:for="zipcode">우편번호</label>
-            <input type="text" th:field="*{zipcode}" id="zipcode" class="form-control" placeholder="우편번호를 입력하세요"
-                   readonly onclick="findAddr()">
+            <input type="text" th:field="*{zipcode}" id="zipcode" class="form-control" placeholder="우편번호를 입력하세요" readonly>
             <p th:if="${#fields.hasErrors('zipcode')}" th:errors="*{zipcode}">Incorrect zipcode</p>
         </div>
 
         <div>
             <label th:for="streetAddr">도로명 주소</label>
-            <input type="text" th:field="*{streetAddr}" id="streetAddr" class="form-control" placeholder="도로명 주소를 입력하세요"
-                   readonly onclick="findAddr()">
+            <input type="text" th:field="*{streetAddr}" id="streetAddr" class="form-control" placeholder="도로명 주소를 입력하세요" readonly>
             <p th:if="${#fields.hasErrors('streetAddr')}" th:errors="*{streetAddr}">Incorrect streetAddr</p>
         </div>
 
@@ -50,115 +50,16 @@
             <p th:if="${#fields.hasErrors('detailAddr')}" th:errors="*{detailAddr}">Incorrect detailAddr</p>
 
         </div>
-
         <br>
-
         <button type="submit" id="submitBtn" class="btn btn-primary" disabled>회원가입</button>
     </form>
     <br>
 </div>
-
 </body>
 
 <!-- Daum 주소 검색 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
-<script>
-    function findAddr() {
-        new daum.Postcode({
-            oncomplete: function (data) {
-                var addr = '';
-                var extraAddr = '';
-
-                if (data.userSelectedType === 'R') {
-                    addr = data.roadAddress;
-                } else {
-                    addr = data.jibunAddress;
-                }
-
-                if (data.userSelectedType === 'R') {
-                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-                        extraAddr += data.bname;
-                    }
-                    if (data.buildingName !== '' && data.apartment === 'Y') {
-                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    if (extraAddr !== '') {
-                        extraAddr = ' (' + extraAddr + ')';
-                    }
-                    document.getElementById("detailAddr").value = extraAddr;
-                } else {
-                    document.getElementById("detailAddr").value = '';
-                }
-                document.getElementById('zipcode').value = data.zonecode;
-                document.getElementById("streetAddr").value = addr;
-                document.getElementById("detailAddr").focus();
-            }
-        }).open();
-    }
-
-    // 이메일 중복 확인
-    function checkEmail() {
-        var email = document.getElementById("email").value;
-        if (!email) {
-            alert("이메일을 입력해주세요.");
-            return;
-        }
-        var submitBtn = document.getElementById("submitBtn");
-        console.log("이메일 중복 확인 요청: ", email); // 디버깅용 로그 추가
-
-        fetch("/join/duplicate/email?email=" + encodeURIComponent(email))
-            .then(response => {
-                console.log("서버 응답 상태 코드: ", response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log("서버 응답 데이터: ", data);
-                const resultElement = document.getElementById("emailCheckResult");
-                if (data.exists) {
-                    resultElement.textContent = "이미 사용 중인 이메일입니다.";
-                    resultElement.style.color = "red";
-                    submitBtn.disabled = true;
-                } else {
-                    resultElement.textContent = "사용 가능한 이메일입니다.";
-                    resultElement.style.color = "green";
-                    submitBtn.disabled = false;
-                }
-            })
-            .catch(error => {
-                console.error("AJAX 요청 실패: ", error);
-            });
-    }
-
-    // 비밀번호 확인
-    function checkPasswordMatch() {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("passwordConfirm").value;
-        var message = document.getElementById("passwordMatchMessage");
-        var submitBtn = document.getElementById("submitBtn");
-
-        if (password === confirmPassword && password.length > 0) {
-            message.textContent = "비밀번호가 일치합니다.";
-            message.style.color = "green";
-            submitBtn.disabled = false;
-        } else {
-            message.textContent = "비밀번호가 일치하지 않습니다.";
-            message.style.color = "red";
-            submitBtn.disabled = true;
-        }
-    }
-
-    // 비밀번호 유효성 검사
-    function validatePassword() {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("passwordConfirm").value;
-
-        if (password !== confirmPassword) {
-            alert("비밀번호가 일치하지 않습니다.");
-            return false;
-        }
-        return true;
-    }
-</script>
+<script src="/js/join.js"></script>
+<script src="/js/deliveryAddress.js"></script>
 
 </html>

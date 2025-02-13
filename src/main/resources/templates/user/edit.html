@@ -6,7 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-<a th:href="@{/}">홈으로 가기</a>
+
+<h2>개인정보 수정</h2>
+
+<form th:action="@{/}">
+    <button>홈으로 가기</button>
+</form>
 <div>
     <form role="form" action="/users" th:object="${updateUserDto}" method="post">
         <div>
@@ -35,9 +40,12 @@
 
         <button type="submit" id="submitBtn" class="btn btn-primary">수정</button>
     </form>
-    <br>
 </div>
-<a th:href="@{/users}">취소</a>
+
+<form th:action="@{/users}">
+    <button>취소</button>
+</form>
+
 <form th:action="@{/users/delete}" method="post">
     <button type="submit" onclick="return confirm('정말 탈퇴하시겠습니까?');">탈퇴</button>
 </form>

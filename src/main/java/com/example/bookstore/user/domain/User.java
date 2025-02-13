@@ -5,11 +5,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
-@AllArgsConstructor
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@AllArgsConstructor
+@Entity
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
