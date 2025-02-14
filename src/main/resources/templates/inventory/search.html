@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/admin/inventory}">
+    <button>도서 관리</button>
+</form>
+<!-- 검색 -->
+<div>
+    <form action="/admin/inventory/search" method="get">
+        <input type="text" name="query">
+        <button type="submit">검색</button>
+    </form>
+</div>
+
+<div th:if="${books} != null">
+    <h2>책 검색 결과</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>썸네일</th>
+            <th>제목</th>
+            <th>저자</th>
+            <th>출판사</th>
+            <th>판매상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(books)}">
+            <td colspan="4">검색된 책이 없습니다.</td>
+        </tr>
+        <tr th:each="book : ${books}">
+            <td><img th:src="${book.thumbnail}" alt="책 이미지" width="80"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${#strings.arrayJoin(book.authors, ', ')}"></td>
+            <td th:text="${book.publisher}"></td>
+            <td th:text="${book.status}"></td>
+            <td>
+                <form action="/admin/inventory/add" method="get">
+                    <input type="hidden" name="query" th:value="${book.isbn}">
+                    <button type="submit">등록</button>
+                </form>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+<!-- 페이징 -->
+<div class="paging" th:if="${query} != null">
+    <a th:if="${currentPage > 1}" th:href="@{/admin/inventory/search(query=${query}, page=${currentPage - 1})}">이전
+        페이지</a>
+    <span th:text="${currentPage}"></span> / <span th:text="${totalPages}"></span>
+    <a th:if="${currentPage < totalPages}"
+       th:href="@{/admin/inventory/search(query=${query}, page=${currentPage + 1})}">다음 페이지</a>
+</div>
+</body>
+</html>

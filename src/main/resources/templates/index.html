@@ -27,5 +27,36 @@
         <button>회원가입</button>
     </form>
 </div>
+
+<div>
+    <input type="text" name="query">
+    <button type="submit">검색</button>
+</div>
+
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>썸네일</th>
+        <th>제목</th>
+        <th>isbn</th>
+        <th>작가</th>
+        <th>출판사</th>
+        <th>판매가격</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.inventoryId}"></td>
+        <td><img th:src="${book.thumbnail}" alt="책 이미지" width="80"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.isbn}"></td>
+        <td th:text="${book.authors}"></td>
+        <td th:text="${book.publisher}"></td>
+        <td th:text="${book.salePrice}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

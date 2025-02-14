@@ -1,6 +1,7 @@
 package com.example.bookstore;
 
 import com.example.bookstore.deliveryaddress.service.DeliveryAddressInfoService;
+import com.example.bookstore.inventory.service.InventoryService;
 import com.example.bookstore.user.domain.User;
 import com.example.bookstore.user.dto.JoinUserDto;
 import com.example.bookstore.user.service.UserService;
@@ -23,9 +24,11 @@ public class HomeController {
 
     private final UserService userService;
     private final DeliveryAddressInfoService deliveryAddressInfoService;
+    private final InventoryService inventoryService;
 
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("books", inventoryService.findAllForUser());
         return "index";
     }
 

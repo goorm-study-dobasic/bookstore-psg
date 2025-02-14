@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>책 상세 정보</title>
+    <style>
+        .container {
+            width: 60%;
+            margin: auto;
+            text-align: center;
+        }
+
+        img {
+            max-width: 200px;
+        }
+
+        .info {
+            text-align: left;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<h2>책 상세조회</h2>
+
+
+<form th:action="@{/admin/inventory/edit/{inventoryId}(inventoryId=${inventoryDto.inventoryId})}" method="get">
+    <div><img th:src="${inventoryDto.thumbnail}" alt="책 이미지" width="80"></div>
+    <div th:text="'정보:' + ${inventoryDto.url}"></div>
+    <div th:text="'ID:' + ${inventoryDto.inventoryId}"></div>
+    <div th:text="'제목:' + ${inventoryDto.title}"></div>
+    <div th:text="'출판일:' + ${inventoryDto.datetime}"></div>
+    <div th:text="'작가:' + ${inventoryDto.authors}"></div>
+    <div th:text="'출판사:' + ${inventoryDto.publisher}"></div>
+    <div th:text="'번역자:' + ${inventoryDto.translators}"></div>
+    <div th:text="'정가:' + ${inventoryDto.price}"></div>
+    <div th:text="'판매가:' + ${inventoryDto.salePrice}"></div>
+    <div th:text="'등록자:' + ${inventoryDto.createdBy}"></div>
+    <div th:text="'등록일:' + ${inventoryDto.createdAt}"></div>
+    <div th:text="'수정자:' + ${inventoryDto.lastModifiedBy}"></div>
+    <div th:text="'수정일:' + ${inventoryDto.lastModifiedAt}"></div>
+    <div th:text="'수량:' + ${inventoryDto.quantity}"></div>
+    <div th:text="'판매상태:' + ${inventoryDto.status}"></div>
+    <button type="button" onclick="window.location.href='/admin/inventory'">목록으로</button>
+    <button type="submit">수정</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>책 상세 정보</title>
+    <style>
+        .container {
+            width: 60%;
+            margin: auto;
+            text-align: center;
+        }
+
+        img {
+            max-width: 200px;
+        }
+
+        .info {
+            text-align: left;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<form action="/admin/inventory/add" method="post" th:action th:object="${inventoryDto}">
+    <div class="container">
+        <img th:src="${inventoryDto.thumbnail}" alt="책 이미지"><input hidden th:field="${inventoryDto.thumbnail}">
+        <h2 th:text="${inventoryDto.title}"></h2><input hidden th:field="${inventoryDto.title}">
+        <p><a th:href="${inventoryDto.url}">상세 정보</a></p><input hidden th:field="${inventoryDto.url}">
+        <input hidden th:field="${inventoryDto.status}">
+        <div class="info">
+            <p><strong>저자:</strong> <span th:text="${#strings.arrayJoin(inventoryDto.authors, ', ')}"></span> <input hidden th:field="${inventoryDto.authors}"></p>
+            <p><strong>출판사:</strong> <span th:text="${inventoryDto.publisher}"></span> <input hidden th:field="${inventoryDto.publisher}"></p>
+            <p><strong>출판일:</strong> <span th:text="${inventoryDto.datetime}"></span> <input hidden th:field="${inventoryDto.datetime}"></p>
+            <p><strong>내용:</strong> <span th:text="${inventoryDto.contents}"></span><input hidden th:field="${inventoryDto.contents}"></p>
+            <p><strong>isbn:</strong> <span th:text="${inventoryDto.isbn}"></span> <input hidden th:field="${inventoryDto.isbn}"></p>
+            <p><strong>번역자:</strong> <span th:text="${#strings.arrayJoin(inventoryDto.translators, ', ')}"></span> <input hidden th:field="${inventoryDto.translators}"></p>
+            <p><strong>정가:</strong> <span th:text="${inventoryDto.price}"></span> <input hidden th:field="${inventoryDto.price}"></p>
+            <p><strong>판매가:</strong> <span th:text="${inventoryDto.salePrice}"></span> <input hidden th:field="${inventoryDto.salePrice}"></p>
+            <p><strong>수량:</strong> <input type="text" name="quantity" th:field="${inventoryDto.quantity}"></p>
+        </div>
+        <button type="submit">등록</button>
+        <button type="button" onclick="window.location.href='/admin/inventory/search'">취소</button>
+    </div>
+</form>
+</body>
+</html>

@@ -27,7 +27,7 @@
         <td th:text="${userDto.phone}"></td>
         <td th:text="${userDto.grade}"></td>
         <td th:text="${userDto.mileage}"></td>
-        <td>
+        <td th:if="${userDto.useYn} == 'Y'">
             <form th:action="@{/admin/blacklist/add}" method="post">
                 <input type="hidden" name="email" th:value="${userDto.email}">
                 <button type="submit">블랙리스트 등록</button>

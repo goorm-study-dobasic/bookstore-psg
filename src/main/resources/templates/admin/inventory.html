@@ -1,0 +1,54 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<h2>도서 관리</h2>
+<form th:action="@{/admin}">
+    <button>홈으로 가기</button>
+</form>
+<form th:action="@{/admin/inventory/search}">
+    <button>도서 등록</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>썸네일</th>
+        <th>제목</th>
+        <th>수량</th>
+        <th>정가</th>
+        <th>판매가격</th>
+        <th>등록자</th>
+        <th>등록일</th>
+        <th>수정자</th>
+        <th>수정일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.inventoryId}"></td>
+        <td><img th:src="${book.thumbnail}" alt="책 이미지" width="80"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.quantity}"></td>
+        <td th:text="${book.price}"></td>
+        <td th:text="${book.salePrice}"></td>
+        <td th:text="${book.createdBy}"></td>
+        <td th:text="${book.createdAt}"></td>
+        <td th:text="${book.lastModifiedBy}"></td>
+        <td th:text="${book.lastModifiedAt}"></td>
+        <td>
+        <form th:action="@{/admin/inventory/{isbn}(isbn=${book.isbn})}" method="get">
+            <button type="submit">상세조회</button>
+        </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

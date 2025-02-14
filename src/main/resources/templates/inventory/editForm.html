@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>책 수정</h2>
+
+<div><img th:src="${inventoryDto.thumbnail}" alt="책 이미지" width="80"></div>
+<div th:text="'정보:' + ${inventoryDto.url}"></div>
+<div th:text="'ID:' + ${inventoryDto.inventoryId}"></div>
+<div th:text="'제목:' + ${inventoryDto.title}"></div>
+<div th:text="'출판일:' + ${inventoryDto.datetime}"></div>
+<div th:text="'작가:' + ${inventoryDto.authors}"></div>
+<div th:text="'출판사:' + ${inventoryDto.publisher}"></div>
+<div th:text="'번역자:' + ${inventoryDto.translators}"></div>
+<div th:text="'정가:' + ${inventoryDto.price}"></div>
+<div th:text="'판매가:' + ${inventoryDto.salePrice}"></div>
+<div th:text="'등록자:' + ${inventoryDto.createdBy}"></div>
+<div th:text="'등록일:' + ${inventoryDto.createdAt}"></div>
+<div th:text="'수정자:' + ${inventoryDto.lastModifiedBy}"></div>
+<div th:text="'수정일:' + ${inventoryDto.lastModifiedAt}"></div>
+<form action="/admin/inventory/edit" method="post" th:object="${updateInventoryDto}">
+    <div hidden><input name="inventoryId" th:value="${inventoryDto.inventoryId}"></div>
+    <div>수량:<input th:field="*{quantity}"></div>
+    <div>판매상태(ON_SALES, OUT_OF_STOCK, OUT_OF_PRINT 중 입력): <input th:field="*{status}"></div>
+    <button type="submit">수정</button>
+</form>
+<form th:action="@{/admin/inventory/{isbn}(isbn=${inventoryDto.isbn})}" method="get">
+    <button type="submit">취소</button>
+</form>
+</body>
+</html>
