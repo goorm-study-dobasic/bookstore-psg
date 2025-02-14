@@ -39,7 +39,14 @@
     <div th:text="'수정자:' + ${inventoryDto.lastModifiedBy}"></div>
     <div th:text="'수정일:' + ${inventoryDto.lastModifiedAt}"></div>
     <div th:text="'수량:' + ${inventoryDto.quantity}"></div>
-    <div th:text="'판매상태:' + ${inventoryDto.status}"></div>
+    <!-- 판매 상태를 한국어로 변환하여 표시 -->
+    <div>
+        판매상태:
+        <span th:if="${inventoryDto.status == T(com.example.bookstore.inventory.domain.InventoryStatus).ON_SALES}">판매 중</span>
+        <span th:if="${inventoryDto.status == T(com.example.bookstore.inventory.domain.InventoryStatus).OUT_OF_STOCK}">품절</span>
+        <span th:if="${inventoryDto.status == T(com.example.bookstore.inventory.domain.InventoryStatus).OUT_OF_PRINT}">절판</span>
+        <span th:if="${inventoryDto.status == null}">알 수 없음</span>
+    </div>
     <button type="button" onclick="window.location.href='/admin/inventory'">목록으로</button>
     <button type="submit">수정</button>
 </form>

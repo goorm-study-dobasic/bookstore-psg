@@ -23,8 +23,32 @@
 <div th:text="'수정일:' + ${inventoryDto.lastModifiedAt}"></div>
 <form action="/admin/inventory/edit" method="post" th:object="${updateInventoryDto}">
     <div hidden><input name="inventoryId" th:value="${inventoryDto.inventoryId}"></div>
-    <div>수량:<input th:field="*{quantity}"></div>
-    <div>판매상태(ON_SALES, OUT_OF_STOCK, OUT_OF_PRINT 중 입력): <input th:field="*{status}"></div>
+    <div>수량:<input type="number" th:field="*{quantity}"></div>
+
+    <!-- 판매상태 드롭다운 -->
+<!--    <div>-->
+<!--    판매 상태:-->
+<!--    <select th:field="*{status}">-->
+<!--        <option value="ON_SALES">판매 중</option>-->
+<!--        <option value="OUT_OF_STOCK">품절</option>-->
+<!--        <option value="OUT_OF_PRINT">절판</option>-->
+<!--    </select>-->
+<!--    </div>-->
+
+    <!-- 판매 상태 라디오 버튼 -->
+    <div>
+        판매 상태:
+        <label>
+            <input type="radio" th:field="*{status}" value="ON_SALES"> 판매 중
+        </label>
+        <label>
+            <input type="radio" th:field="*{status}" value="OUT_OF_STOCK"> 품절
+        </label>
+        <label>
+            <input type="radio" th:field="*{status}" value="OUT_OF_PRINT"> 절판
+        </label>
+    </div>
+
     <button type="submit">수정</button>
 </form>
 <form th:action="@{/admin/inventory/{isbn}(isbn=${inventoryDto.isbn})}" method="get">

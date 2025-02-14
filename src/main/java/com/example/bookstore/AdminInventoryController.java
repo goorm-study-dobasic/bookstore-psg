@@ -43,7 +43,9 @@ public class AdminInventoryController {
     public String editForm(@PathVariable Long inventoryId, Model model) {
         InventoryDtoForAdmin inventoryDto = inventoryService.getInventoryById(inventoryId);
         model.addAttribute("inventoryDto", inventoryDto);
-        model.addAttribute("updateInventoryDto", new UpdateInventoryDto());
+
+        UpdateInventoryDto updateInventoryDto = new UpdateInventoryDto(inventoryDto.getQuantity(), inventoryDto.getStatus().name());
+        model.addAttribute("updateInventoryDto", updateInventoryDto);
         return "inventory/editForm";
     }
 

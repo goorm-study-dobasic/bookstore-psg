@@ -1,7 +1,6 @@
 package com.example.bookstore.inventory.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,4 +13,8 @@ public class UpdateInventoryDto {
     private int quantity;
     private String status;
 
+    public UpdateInventoryDto(int quantity, String status) {
+        this.quantity = quantity;
+        this.status = status;
+    }
 }
