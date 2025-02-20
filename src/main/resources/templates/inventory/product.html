@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<h2>상품 조회</h2>
+<form th:action="@{/}">
+    <button>홈으로 가기</button>
+</form>
+
+<div><img th:src="${inventoryDto.thumbnail}" alt="책 이미지" width="80"></div>
+<div th:text="'제목:' + ${inventoryDto.title}"></div>
+<div th:text="'isbn:' + ${inventoryDto.isbn}"></div>
+<div th:text="'작가:' + ${inventoryDto.authors}"></div>
+<div th:text="'출판사:' + ${inventoryDto.publisher}"></div>
+<div th:text="'판매가:' + ${inventoryDto.salePrice}"></div>
+
+<form th:action="@{/users/carts/add}" th:object="${addCartDto}" method="post">
+    <input type="hidden" name="email">
+    <input type="hidden" name="inventoryId" th:value="${inventoryDto.inventoryId}">
+    <input type="number" name="quantity" value="1" min="1" required>
+    <div>
+    <button type="submit">장바구니</button>
+    </div>
+</form>
+</body>
+</html>

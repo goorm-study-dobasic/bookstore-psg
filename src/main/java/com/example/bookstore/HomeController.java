@@ -1,6 +1,8 @@
 package com.example.bookstore;
 
+import com.example.bookstore.cart.dto.AddCartDto;
 import com.example.bookstore.deliveryaddress.service.DeliveryAddressInfoService;
+import com.example.bookstore.inventory.dto.InventoryDtoForUser;
 import com.example.bookstore.inventory.service.InventoryService;
 import com.example.bookstore.user.domain.User;
 import com.example.bookstore.user.dto.JoinUserDto;
@@ -61,5 +63,13 @@ public class HomeController {
         System.out.println("이메일 중복 확인 요청: " + email); // 디버깅 로그
         boolean exists = userService.checkDuplicateEmail(email);
         return Collections.singletonMap("exists", exists);
+    }
+
+    @PostMapping("/books/product")
+    public String getBook(@RequestParam("inventoryId") Long inventoryId, Model model) {
+        InventoryDtoForUser inventoryDtoForUser = inventoryService.findInventoryDtoForUserById(inventoryId);
+        model.addAttribute("addCartDto", new AddCartDto());
+        model.addAttribute("inventoryDto", inventoryDtoForUser);
+        return "inventory/product";
     }
 }

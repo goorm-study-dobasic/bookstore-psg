@@ -1,5 +1,5 @@
 package com.example.bookstore.user.domain;
 
 public enum UserGrade {
-    BRONZE, SILVER, GOLD
+    BRONZE, SILVER, GOLD, DIAMOND
 }

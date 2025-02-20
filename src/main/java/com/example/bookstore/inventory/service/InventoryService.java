@@ -42,6 +42,20 @@ public class InventoryService {
         return InventoryDtoForAdmin.from(inventory);
     }
 
+    public Inventory findInventoryById(Long inventoryId) {
+        Inventory inventory = inventoryRepository.findInventoryByInventoryId(inventoryId)
+                .orElseThrow(() -> new NoSuchElementException());
+
+        return inventory;
+    }
+
+    public InventoryDtoForUser findInventoryDtoForUserById(Long inventoryId) {
+        Inventory inventory = inventoryRepository.findInventoryByInventoryId(inventoryId)
+                .orElseThrow(() -> new NoSuchElementException());
+
+        return InventoryDtoForUser.from(inventory);
+    }
+
     public InventoryDtoForAdmin getInventoryByIsbn(String isbn) {
         Inventory inventory = inventoryRepository.findInventoryByIsbn(isbn);
         return InventoryDtoForAdmin.from(inventory);
