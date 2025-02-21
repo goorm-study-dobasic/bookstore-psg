@@ -9,19 +9,43 @@
 </form>
 
 <div><img th:src="${inventoryDto.thumbnail}" alt="책 이미지" width="80"></div>
-<div th:text="'제목:' + ${inventoryDto.title}"></div>
-<div th:text="'isbn:' + ${inventoryDto.isbn}"></div>
-<div th:text="'작가:' + ${inventoryDto.authors}"></div>
-<div th:text="'출판사:' + ${inventoryDto.publisher}"></div>
-<div th:text="'판매가:' + ${inventoryDto.salePrice}"></div>
+<div th:text="'제목: ' + ${inventoryDto.title}"></div>
+<div th:text="'ISBN: ' + ${inventoryDto.isbn}"></div>
+<div th:text="'작가: ' + ${inventoryDto.authors}"></div>
+<div th:text="'출판사: ' + ${inventoryDto.publisher}"></div>
+<div th:text="'판매가: ' + ${inventoryDto.salePrice}"></div>
+<div th:text="'남은 수량: ' + ${inventoryDto.quantity}"></div>
 
+<!-- 장바구니 추가 폼 -->
 <form th:action="@{/users/carts/add}" th:object="${addCartDto}" method="post">
-    <input type="hidden" name="email">
     <input type="hidden" name="inventoryId" th:value="${inventoryDto.inventoryId}">
-    <input type="number" name="quantity" value="1" min="1" required>
+    <input id="quantityInput" type="number" name="quantity" value="1" min="1" required>
     <div>
-    <button type="submit">장바구니</button>
+        <button type="submit">장바구니</button>
+
+        <!-- 즉시 구매하기 버튼 (재고가 없으면 비활성화) -->
+        <button type="submit"
+                form="buyNowForm"
+                th:disabled="${inventoryDto.quantity == 0}">
+            구매하기
+        </button>
     </div>
 </form>
+
+
+<!-- 즉시 구매 폼 -->
+<form id="buyNowForm" th:action="@{/users/orders}" method="post">
+    <input type="hidden" name="inventoryId" th:value="${inventoryDto.inventoryId}"> <!-- 상품 정보 전송 -->
+    <input type="hidden" name="quantity" id="buyNowQuantity"> <!-- 수량 전송 -->
+</form>
+
+<script>
+    // 구매하기 버튼을 눌렀을 때 수량을 전달
+    document.querySelector("[form='buyNowForm']").addEventListener("click", function () {
+        const quantityValue = document.querySelector("#quantityInput").value;
+        document.querySelector("#buyNowQuantity").value = quantityValue;
+    });
+</script>
+
 </body>
 </html>

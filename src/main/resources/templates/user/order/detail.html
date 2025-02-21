@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>주문 상세</title>
+</head>
+<body>
+<h2>주문 내역</h2>
+<form th:action="@{/}">
+    <button>홈으로 가기</button>
+</form>
+<form th:action="@{/users}">
+    <button>마이페이지</button>
+</form>
+
+<h2>주문 상세</h2>
+<div th:text="'주문번호: ' + ${orderDto.orderId}"></div>
+<div th:text="'주문상태: ' + ${orderDto.status.value}"></div>
+<div th:text="'주문날짜: ' + ${orderDto.createdAt}"></div>
+
+<table>
+    <thead>
+    <tr>
+        <th>썸네일</th>
+        <th>책 이름</th>
+        <th>개당 가격</th>
+        <th>수량</th>
+        <th>총 가격</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="orderItemDto : ${orderItemDtos}">
+        <th><img th:src="${orderItemDto.inventoryDtoForUser.thumbnail}" alt="책 이미지" width="80"></th>
+        <td th:text="${orderItemDto.inventoryDtoForUser.title}"></td>
+        <td th:text="${orderItemDto.inventoryDtoForUser.salePrice}"></td>
+        <td th:text="${orderItemDto.quantity}"></td>
+        <td th:text="${orderItemDto.price}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 주문 취소 버튼 -->
+<form th:action="@{/users/orders/cancel}" method="post">
+    <input type="hidden" name="orderId" th:value="${orderDto.orderId}">
+    <button type="submit"
+            th:if="${orderDto.status == T(com.example.bookstore.order.domain.OrderStatus).PENDING
+                    or orderDto.status == T(com.example.bookstore.order.domain.OrderStatus).PAID}">
+        주문 취소
+    </button>
+</form>
+
+<form th:action="@{/users/orders}">
+    <button>목록으로</button>
+</form>
+
+</body>
+</html>

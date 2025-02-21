@@ -39,6 +39,12 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public Cart findCartById(Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new NoSuchElementException());
+        return cart;
+    }
+
     public List<CartDto> findAllByUser(String email) {
         User user = userService.findUserByEmail(email);
         List<Cart> all = cartRepository.findByUser(user);

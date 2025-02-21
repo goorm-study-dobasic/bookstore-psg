@@ -59,11 +59,26 @@ public class Inventory {
         this.quantity += quantity;
     }
 
+    public void minusQuantity(int quantity) {
+        this.quantity -= quantity;
+        if (this.quantity == 0) {
+            this.status = InventoryStatus.OUT_OF_STOCK;
+        }
+    }
+
+    public boolean quantityIsMoreThan(int quantity) {
+        return this.quantity >= quantity;
+    }
+
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
 
     public void changeStatus(String status) {
         this.status = InventoryStatus.valueOf(status);
+    }
+
+    public int totalPrice(int quantity) {
+        return this.salePrice * quantity;
     }
 }

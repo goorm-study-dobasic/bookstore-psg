@@ -1,0 +1,41 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<h2>주문 내역</h2>
+<form th:action="@{/}">
+    <button>홈으로 가기</button>
+</form>
+<form th:action="@{/users}">
+    <button>마이페이지</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>주문번호</th>
+        <th>주문날짜</th>
+        <th>주문상태</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="orderDto : ${orderDtos}">
+        <td th:text="${orderDto.orderId}"></td>
+        <td th:text="${orderDto.createdAt}"></td>
+        <td th:text="${orderDto.status.value}"></td>
+        <td>
+            <form th:action="@{/users/orders/detail}" method="post">
+                <input type="hidden" name="orderId" th:value="${orderDto.orderId}">
+                <button type="submit">상세보기</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

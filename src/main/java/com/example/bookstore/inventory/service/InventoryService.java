@@ -32,7 +32,7 @@ public class InventoryService {
                 .publisher(addInventoryDto.getPublisher())
                 .translators(String.join(",", addInventoryDto.getTranslators()))
                 .price(addInventoryDto.getPrice())
-                .salePrice(addInventoryDto.getSalePrice())
+                .salePrice(addInventoryDto.getSalePrice() == -1 ? addInventoryDto.getPrice() : addInventoryDto.getSalePrice()) // 판매가격이 -1이면 정가로 등록
                 .thumbnail(addInventoryDto.getThumbnail())
                 .status(addInventoryDto.getStatus())
                 .quantity(addInventoryDto.getQuantity())

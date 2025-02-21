@@ -14,6 +14,7 @@ public class InventoryDtoForUser {
     private String authors;
     private String publisher;
     private int salePrice;
+    private int quantity;
     private String thumbnail;
 
     public static InventoryDtoForUser from(Inventory inventory) {
@@ -24,6 +25,7 @@ public class InventoryDtoForUser {
                 .authors(inventory.getAuthors())
                 .publisher(inventory.getPublisher())
                 .salePrice(inventory.getSalePrice())
+                .quantity(inventory.getQuantity())
                 .thumbnail(inventory.getThumbnail())
                 .build();
     }

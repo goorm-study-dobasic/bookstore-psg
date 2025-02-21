@@ -11,8 +11,18 @@
                 return;
             }
 
-            const form = document.getElementById("orderForm");
-            form.submit();
+            const orderForm = document.getElementById("orderForm");
+            orderForm.innerHTML = ""; // 기존 데이터 초기화
+
+            checkedItems.forEach(item => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "cartIds";
+                input.value = item.value;
+                orderForm.appendChild(input);
+            });
+
+            orderForm.submit();
         }
     </script>
 </head>
@@ -20,58 +30,75 @@
 
 <h2>장바구니</h2>
 
+<!-- 홈 / 마이페이지 이동 버튼 -->
 <form th:action="@{/}">
     <button>홈으로 가기</button>
 </form>
-
-<!-- 주문 요청을 보낼 폼 -->
-<form id="orderForm" th:action="@{/users/orders}" method="post">
-    <table>
-        <thead>
-        <tr>
-            <th>선택</th> <!-- 체크박스 -->
-            <th>ID</th>
-            <th>썸네일</th>
-            <th>제목</th>
-            <th>담은 수량</th>
-            <th>삭제</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="cartDto : ${cartDtos}">
-
-            <td th:text="${cartDto.cartId}"></td>
-            <td><img th:src="${cartDto.inventoryDtoForUser.thumbnail}" alt="책 이미지" width="80"></td>
-            <td th:text="${cartDto.inventoryDtoForUser.title}"></td>
-
-            <!-- 수량 입력 필드 -->
-            <td>
-                <form th:action="@{/users/carts/edit}" method="post">
-                    <input type="hidden" name="cartId" th:value="${cartDto.cartId}">
-                    <input type="number" name="quantity" th:value="${cartDto.quantity}" min="1" required>
-                    <button type="submit">수량 변경</button>
-                </form>
-            </td>
-
-            <!-- 삭제 버튼 -->
-            <td>
-                <form th:action="@{/users/carts/delete}" method="post">
-                    <input type="hidden" name="cartId" th:value="${cartDto.cartId}">
-                    <button type="submit">삭제</button>
-                </form>
-            </td>
-            <td>
-                <input type="checkbox" name="cartIds" th:value="${cartDto.cartId}">
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <!-- 주문하기 버튼 -->
-    <button type="button" onclick="submitOrder()">주문하기</button>
-</form>
 <form th:action="@{/users}">
-    <button>뒤로가기</button>
+    <button>마이페이지</button>
 </form>
+
+<!-- 에러 메시지 표시 -->
+<div th:if="${errorMessage}" style="color: red; font-weight: bold;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<!-- 장바구니 테이블 -->
+<table>
+    <thead>
+    <tr>
+        <th>선택</th> <!-- 체크박스 -->
+        <th>ID</th>
+        <th>썸네일</th>
+        <th>제목</th>
+        <th>담은 수량</th>
+        <th>삭제</th>
+        <th>재고</th> <!-- 재고 표시 추가 -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cartDto : ${cartDtos}">
+        <td>
+            <!-- 재고가 0 이상이면 체크 가능, 아니면 비활성화 -->
+            <input type="checkbox" name="cartIds" th:value="${cartDto.cartId}"
+                   th:disabled="${cartDto.inventoryDtoForUser.quantity == 0}">
+        </td>
+        <td th:text="${cartDto.cartId}"></td>
+        <td><img th:src="${cartDto.inventoryDtoForUser.thumbnail}" alt="책 이미지" width="80"></td>
+        <td th:text="${cartDto.inventoryDtoForUser.title}"></td>
+
+        <!-- 수량 변경 (독립적인 폼) -->
+        <td>
+            <form th:action="@{/users/carts/edit}" method="post">
+                <input type="hidden" name="cartId" th:value="${cartDto.cartId}">
+                <input style="width: 60px" type="number" name="quantity" th:value="${cartDto.quantity}"
+                       min="1" required>
+                <button type="submit">수량 변경</button>
+            </form>
+        </td>
+
+        <!-- 삭제 버튼 (독립적인 폼) -->
+        <td>
+            <form th:action="@{/users/carts/delete}" method="post">
+                <input type="hidden" name="cartId" th:value="${cartDto.cartId}">
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+
+        <!-- 재고 표시 -->
+        <td>
+            <span th:if="${cartDto.inventoryDtoForUser.quantity > 0}" th:text="'재고: ' + ${cartDto.inventoryDtoForUser.quantity}"></span>
+            <span th:if="${cartDto.inventoryDtoForUser.quantity == 0}" style="color: red; font-weight: bold;">재고 없음</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 주문하기 폼 (선택된 항목만 POST로 전송) -->
+<form id="orderForm" th:action="@{/users/orders}" method="post"></form>
+
+<!-- 주문하기 버튼 -->
+<button type="button" onclick="submitOrder()">주문하기</button>
+
 </body>
 </html>
