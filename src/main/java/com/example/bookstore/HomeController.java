@@ -66,10 +66,20 @@ public class HomeController {
     }
 
     @PostMapping("/books/product")
-    public String getBook(@RequestParam("inventoryId") Long inventoryId, Model model) {
+    public String getBook(@RequestParam("inventoryId") Long inventoryId,
+                          @RequestParam(value = "quantity", required = false) Integer quantity,
+                          Model model) {
         InventoryDtoForUser inventoryDtoForUser = inventoryService.findInventoryDtoForUserById(inventoryId);
+
         model.addAttribute("addCartDto", new AddCartDto());
         model.addAttribute("inventoryDto", inventoryDtoForUser);
+
+        // 사용자가 입력한 quantity가 존재하고, 재고보다 많으면 에러 메시지 추가
+        if (quantity != null && quantity > inventoryDtoForUser.getQuantity()) {
+            model.addAttribute("errorMessage", "남은 재고보다 많이 구매할 수 없습니다.");
+        }
+
         return "inventory/product";
     }
+
 }

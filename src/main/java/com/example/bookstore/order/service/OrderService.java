@@ -2,6 +2,9 @@ package com.example.bookstore.order.service;
 
 import com.example.bookstore.cart.domain.Cart;
 import com.example.bookstore.cart.service.CartService;
+import com.example.bookstore.delivery.domain.Delivery;
+import com.example.bookstore.deliveryaddress.domain.DeliveryAddressInfo;
+import com.example.bookstore.deliveryaddress.service.DeliveryAddressInfoService;
 import com.example.bookstore.inventory.domain.Inventory;
 import com.example.bookstore.inventory.service.InventoryService;
 import com.example.bookstore.order.domain.Order;
@@ -27,16 +30,19 @@ public class OrderService {
     private final UserService userService;
     private final InventoryService inventoryService;
     private final CartService cartService;
+    private final DeliveryAddressInfoService deliveryAddressInfoService;
 
-    public void save(Long inventoryId, int quantity, String email) {
+    public void save(Long inventoryId, int quantity, String email, Long addressSeq) {
         User user = userService.findUserByEmail(email);
         Inventory inventory = inventoryService.findInventoryById(inventoryId);
+        DeliveryAddressInfo deliveryAddressInfo = deliveryAddressInfoService.findDeliveryAddressInfoBySeq(addressSeq);
+        Delivery delivery = new Delivery(deliveryAddressInfo);
 
         if (!inventory.quantityIsMoreThan(quantity)) {
             throw new IllegalArgumentException("재고가 부족한 상품이 포함되어 주문을 진행할 수 없습니다.");
         }
 
-        Order order = new Order(user);
+        Order order = new Order(user, delivery);
         orderRepository.save(order);
 
         // OrderItem 저장
@@ -47,8 +53,10 @@ public class OrderService {
         inventory.minusQuantity(quantity);
     }
 
-    public void save(List<Long> cartIds, String email) {
+    public void save(List<Long> cartIds, String email, Long addressSeq) {
         User user = userService.findUserByEmail(email);
+        DeliveryAddressInfo deliveryAddressInfo = deliveryAddressInfoService.findDeliveryAddressInfoBySeq(addressSeq);
+        Delivery delivery = new Delivery(deliveryAddressInfo);
 
         if (cartIds.isEmpty()) {
             throw new IllegalArgumentException("장바구니에 담긴 상품이 없습니다.");
@@ -66,7 +74,7 @@ public class OrderService {
         }
 
         // 주문 생성
-        Order order = new Order(user);
+        Order order = new Order(user, delivery);
         orderRepository.save(order);
 
         // 주문 처리

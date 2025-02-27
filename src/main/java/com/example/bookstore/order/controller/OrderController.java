@@ -1,6 +1,12 @@
 package com.example.bookstore.order.controller;
 
+import com.example.bookstore.cart.dto.CartDto;
+import com.example.bookstore.cart.service.CartService;
+import com.example.bookstore.deliveryaddress.dto.DeliveryAddressInfoDto;
+import com.example.bookstore.deliveryaddress.service.DeliveryAddressInfoService;
+import com.example.bookstore.inventory.dto.InventoryDtoForUser;
 import com.example.bookstore.inventory.dto.OrderItemDto;
+import com.example.bookstore.inventory.service.InventoryService;
 import com.example.bookstore.order.dto.OrderDto;
 import com.example.bookstore.order.service.OrderItemService;
 import com.example.bookstore.order.service.OrderService;
@@ -24,6 +30,9 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderItemService orderItemService;
+    private final DeliveryAddressInfoService deliveryAddressInfoService;
+    private final CartService cartService;
+    private final InventoryService inventoryService;
 
     @GetMapping
     public String getOrders(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -32,31 +41,51 @@ public class OrderController {
         return "user/order";
     }
 
+    @PostMapping(value = "/create", params = {"cartIds"})
+    public String createOrder(@RequestParam("selectedAddress") Long addressSeq,
+                              @RequestParam("cartIds") List<Long> cartIds,
+                              @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        orderService.save(cartIds, customUserDetails.getUsername(), addressSeq);
+
+        return "redirect:/users/orders";
+    }
+
+    @PostMapping(value = "/create", params = {"inventoryId", "quantity"})
+    public String createOrder(@RequestParam("inventoryId") Long inventoryId,
+                              @RequestParam("quantity") int quantity,
+                              @RequestParam("selectedAddress") Long addressSeq,
+                              @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        orderService.save(inventoryId, quantity, customUserDetails.getUsername(), addressSeq);
+
+        return "redirect:/users/orders";
+    }
+
     @PostMapping(params = {"cartIds"})
-    public String createOrder(@RequestParam List<Long> cartIds,
+    public String createOrderForm(@RequestParam List<Long> cartIds,
                               @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                              RedirectAttributes redirectAttributes) {
-        try {
-            orderService.save(cartIds, customUserDetails.getUsername());
-            return "redirect:/users/orders";
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/users/carts"; // 장바구니 페이지로 리다이렉트
-        }
+                              Model model) {
+        List<DeliveryAddressInfoDto> deliveryAddressInfoDtos = deliveryAddressInfoService.findByUser(customUserDetails.getUsername());
+        List<CartDto> carts = cartService.findCartsByIds(cartIds);
+        model.addAttribute("deliveryAddressInfoDtos", deliveryAddressInfoDtos);
+        model.addAttribute("carts", carts);
+
+        return "user/order/check";
     }
 
     @PostMapping(params = {"inventoryId", "quantity"})
-    public String createOrder(@RequestParam("inventoryId") Long inventoryId,
+    public String createOrderForm(@RequestParam("inventoryId") Long inventoryId,
                               @RequestParam("quantity") int quantity,
                               @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                              Model model,
                               RedirectAttributes redirectAttributes) {
-        try {
-            orderService.save(inventoryId, quantity, customUserDetails.getUsername());
-            return "redirect:/users/orders";
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/users/carts"; // 장바구니 페이지로 리다이렉트
-        }
+
+        InventoryDtoForUser inventoryDtoForUser = inventoryService.findInventoryDtoForUserById(inventoryId);
+        List<DeliveryAddressInfoDto> deliveryAddressInfoDtos = deliveryAddressInfoService.findByUser(customUserDetails.getUsername());
+        model.addAttribute("deliveryAddressInfoDtos", deliveryAddressInfoDtos);
+        model.addAttribute("quantity", quantity);
+        model.addAttribute("inventoryDtoForUser", inventoryDtoForUser);
+
+        return "user/order/check2";
     }
 
     @PostMapping("/detail")

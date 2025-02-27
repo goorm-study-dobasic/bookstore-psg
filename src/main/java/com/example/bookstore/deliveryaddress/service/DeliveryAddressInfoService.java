@@ -93,4 +93,11 @@ public class DeliveryAddressInfoService {
 
         return DeliveryAddressInfoDto.from(deliveryAddressInfo);
     }
+
+    public DeliveryAddressInfo findDeliveryAddressInfoBySeq(Long deliveryAddressSeq) {
+        DeliveryAddressInfo deliveryAddressInfo = deliveryAddressInfoRepository.findById(deliveryAddressSeq)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 배송지 주소입니다."));
+
+        return deliveryAddressInfo;
+    }
 }

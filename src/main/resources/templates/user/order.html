@@ -33,6 +33,11 @@
                 <button type="submit">상세보기</button>
             </form>
         </td>
+        <td>
+            <form th:action="@{/delivery/{id}(id=${orderDto.deliveryId})}" method="get">
+                <button type="submit">배송정보확인</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>

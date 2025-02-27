@@ -1,6 +1,5 @@
 package com.example.bookstore.order.repository;
 
-import com.example.bookstore.order.domain.Order;
 import com.example.bookstore.order.domain.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

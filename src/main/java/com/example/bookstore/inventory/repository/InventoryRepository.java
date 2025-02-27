@@ -3,6 +3,8 @@ package com.example.bookstore.inventory.repository;
 import com.example.bookstore.inventory.domain.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
@@ -11,4 +13,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     boolean existsInventoryByIsbn(String isbn);
 
     Inventory findInventoryByIsbn(String isbn);
+
+    List<Inventory> findInventoryByInventoryIdIn(Collection<Long> inventoryIds);
 }

@@ -1,0 +1,38 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>배송정보 확인</title>
+  <link rel="stylesheet" th:href="@{/css/delivery.css}">
+</head>
+<body>
+
+<div class="container">
+  <h2>📦 배송정보 확인</h2>
+
+  <div class="info-box">
+    <p><strong>배송번호:</strong> <span th:text="${deliveryDto.id}"></span></p>
+    <p><strong>배송지정보번호:</strong> <span th:text="${deliveryDto.deliveryAddressInfoDto.deliveryAddressSeq}"></span></p>
+    <p><strong>별칭:</strong> <span th:text="${deliveryDto.deliveryAddressInfoDto.addressName}"></span></p>
+    <p><strong>우편번호:</strong> <span th:text="${deliveryDto.deliveryAddressInfoDto.zipcode}"></span></p>
+    <p><strong>도로명주소:</strong> <span th:text="${deliveryDto.deliveryAddressInfoDto.streetAddr}"></span></p>
+    <p><strong>상세주소:</strong> <span th:text="${deliveryDto.deliveryAddressInfoDto.detailAddr}"></span></p>
+    <p><strong>기타사항:</strong> <span th:text="${deliveryDto.deliveryAddressInfoDto.etc}"></span></p>
+    <p><strong>🚚 출발일시:</strong> <span th:text="${deliveryDto.startedAt}"></span></p>
+    <p><strong>📍 도착일시:</strong> <span th:text="${deliveryDto.arrivedAt}"></span></p>
+  </div>
+
+  <div class="button-group">
+    <form th:action="@{/}">
+      <button class="home-btn">🏠 홈으로 가기</button>
+    </form>
+
+    <form th:action="@{/users/orders}">
+      <button class="order-btn">📜 주문 목록</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

@@ -42,6 +42,13 @@ public class InventoryService {
         return InventoryDtoForAdmin.from(inventory);
     }
 
+    public List<InventoryDtoForUser> findInventoriesDtoForUser(List<Long> inventoryIds) {
+        List<Inventory> inventories = inventoryRepository.findInventoryByInventoryIdIn(inventoryIds);
+        return inventories.stream()
+                .map(inventory -> InventoryDtoForUser.from(inventory))
+                .toList();
+    }
+
     public Inventory findInventoryById(Long inventoryId) {
         Inventory inventory = inventoryRepository.findInventoryByInventoryId(inventoryId)
                 .orElseThrow(() -> new NoSuchElementException());

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>주문 확인</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script th:src="@{/js/order.js}" defer></script>
+</head>
+<body>
+
+<h2>배송지 선택</h2>
+<form id="orderForm" th:action="@{/users/orders/create}" method="post">
+  <div>
+    <th:block th:each="address : ${deliveryAddressInfoDtos}">
+      <label>
+        <input type="radio" name="selectedAddress" th:value="${address.deliveryAddressSeq}" required>
+        <span th:text="${address.addressName} + ' (' + ${address.streetAddr} + ', ' + ${address.detailAddr} + ', ' + ${address.zipcode} + ')'"></span>
+      </label>
+      <br>
+    </th:block>
+  </div>
+
+  <h2>주문 상품</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>표지</th>
+      <th>상품명</th>
+      <th>수량</th>
+      <th>가격</th>
+      <th>합계</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><img th:src="${inventoryDtoForUser.thumbnail}" alt="책 이미지" width="80"></td>
+      <td th:text="${inventoryDtoForUser.title}"></td>
+      <td th:text="${quantity}"></td>
+      <td th:text="${inventoryDtoForUser.salePrice}"></td>
+      <td th:text="${quantity * inventoryDtoForUser.salePrice}"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h3>총 상품 가격: <span th:text="${quantity * inventoryDtoForUser.salePrice}"></span> 원</h3>
+
+  <!-- hidden input을 사용하여 서버에 필요한 값 전송 -->
+  <input type="hidden" name="inventoryId" th:value="${inventoryDtoForUser.inventoryId}">
+  <input type="hidden" name="quantity" th:value="${quantity}">
+
+  <button type="submit">주문하기</button>
+</form>
+
+<!-- 취소 버튼 -->
+<form th:action="@{/}">
+  <button>취소</button>
+</form>
+
+</body>
+</html>

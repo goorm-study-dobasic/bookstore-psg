@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <title>상품 조회</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/product.js}" defer></script>
 </head>
 <body>
+
 <h2>상품 조회</h2>
 <form th:action="@{/}">
     <button>홈으로 가기</button>
 </form>
+
+<!-- 오류 메시지 출력 -->
+<div id="errorMessage" th:if="${errorMessage}" style="color: red; font-weight: bold;">
+    <p th:text="${errorMessage}"></p>
+</div>
 
 <div><img th:src="${inventoryDto.thumbnail}" alt="책 이미지" width="80"></div>
 <div th:text="'제목: ' + ${inventoryDto.title}"></div>
@@ -14,7 +24,8 @@
 <div th:text="'작가: ' + ${inventoryDto.authors}"></div>
 <div th:text="'출판사: ' + ${inventoryDto.publisher}"></div>
 <div th:text="'판매가: ' + ${inventoryDto.salePrice}"></div>
-<div th:text="'남은 수량: ' + ${inventoryDto.quantity}"></div>
+<!-- 재고 정보를 data-attribute로 저장하여 JavaScript에서 직접 가져올 수 있도록 함 -->
+<div id="stockInfo" th:data-stock="${inventoryDto.quantity}" th:text="'남은 수량: ' + ${inventoryDto.quantity}"></div>
 
 <!-- 장바구니 추가 폼 -->
 <form th:action="@{/users/carts/add}" th:object="${addCartDto}" method="post">
@@ -23,15 +34,10 @@
     <div>
         <button type="submit">장바구니</button>
 
-        <!-- 즉시 구매하기 버튼 (재고가 없으면 비활성화) -->
-        <button type="submit"
-                form="buyNowForm"
-                th:disabled="${inventoryDto.quantity == 0}">
-            구매하기
-        </button>
+        <!-- 즉시 구매 버튼: JavaScript에서 재고 확인 후 처리 -->
+        <button type="button" id="buyNowButton">구매하기</button>
     </div>
 </form>
-
 
 <!-- 즉시 구매 폼 -->
 <form id="buyNowForm" th:action="@{/users/orders}" method="post">
@@ -39,13 +45,8 @@
     <input type="hidden" name="quantity" id="buyNowQuantity"> <!-- 수량 전송 -->
 </form>
 
-<script>
-    // 구매하기 버튼을 눌렀을 때 수량을 전달
-    document.querySelector("[form='buyNowForm']").addEventListener("click", function () {
-        const quantityValue = document.querySelector("#quantityInput").value;
-        document.querySelector("#buyNowQuantity").value = quantityValue;
-    });
-</script>
+<!-- 오류 메시지 출력용 -->
+<p id="buyNowErrorMessage" style="color: red; font-weight: bold; display: none;"></p>
 
 </body>
 </html>

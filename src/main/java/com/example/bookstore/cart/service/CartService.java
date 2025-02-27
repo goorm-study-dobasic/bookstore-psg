@@ -39,6 +39,13 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public List<CartDto> findCartsByIds(List<Long> cartIds) {
+        List<Cart> carts = cartRepository.findCartsByCartIdIn(cartIds);
+        return carts.stream()
+                .map(cart -> CartDto.from(cart))
+                .toList();
+    }
+
     public Cart findCartById(Long cartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NoSuchElementException());

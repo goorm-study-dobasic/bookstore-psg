@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>온라인 서점</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <h2>온라인 서점 홈 화면</h2>
-<!-- 로그인 여부에 따라 다른 UI 표시 -->
+
 <div th:if="${#authorization.expression('isAuthenticated()')}">
     <span th:text="${#authentication.principal.nickname} + '님 환영합니다!'"></span>
     <form th:action="@{/users}">
@@ -18,7 +19,6 @@
     </form>
 </div>
 
-<!-- 로그인하지 않은 경우 -->
 <div th:unless="${#authorization.expression('isAuthenticated()')}">
     <form th:action="@{/login}">
         <button>로그인</button>
@@ -28,19 +28,17 @@
     </form>
 </div>
 
-<div>
-    <input type="text" name="query">
+<div class="search-container">
+    <input type="text" name="query" placeholder="검색어 입력">
     <button type="submit">검색</button>
 </div>
 
-
-<table>
+<table class="book-table">
     <thead>
     <tr>
         <th>ID</th>
-        <th>썸네일</th>
+        <th>표지</th>
         <th>제목</th>
-        <th>isbn</th>
         <th>작가</th>
         <th>출판사</th>
         <th>판매가격</th>
@@ -53,16 +51,14 @@
         <td>
             <form th:action="@{/books/product}" method="post">
                 <input type="hidden" name="inventoryId" th:value="${book.inventoryId}">
-                <button type="submit" style="border: none; background: none; cursor: pointer; color: blue; text-decoration: underline;" th:text="${book.title}"></button>
+                <button type="submit" class="book-title" th:text="${book.title}"></button>
             </form>
         </td>
-        <td th:text="${book.isbn}"></td>
         <td th:text="${book.authors}"></td>
         <td th:text="${book.publisher}"></td>
         <td th:text="${book.salePrice}"></td>
     </tr>
     </tbody>
-
 </table>
 </body>
 </html>
